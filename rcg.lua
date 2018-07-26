@@ -1,24 +1,58 @@
 -- Just rename this file in .lua and you're good to go
 
+-- --------------------------------------------------------------------------------------------------------------
+-- --------------------------------Auxiliary functions-----------------------------------------------------------
+-- --------------------------------------------------------------------------------------------------------------
+
 -- Example of an auxiliary function you can define for yourself in order to 
 -- not write duplicated code
-
 function threeD6()
 	math.randomseed(os.time())
 	return math.random (1,6) + math.random (1,6) + math.random (1,6)
 end
 
+-- Heres another function to help you calculate modifiers. This way you only write the function once
+-- Tip: you were mixing data types (sometimes mod was a string and sometimes an integer)
+-- 		Its better to always work with same data types for a same variable to avoid errors
+function getModifier(attribute)
+	local mod = 999
+
+	if (attribute == 3) then 
+			mod = "-3"
+
+	elseif (attribute == 4 or attribute == 5) then 
+		mod = "-2"
+
+	elseif (attribute >= 6 and attribute <= 8) then 
+		mod = "-1"
+
+	elseif (attribute >= 9 and attribute <= 12) then 
+		mod = "+0"
+
+	elseif (attribute >= 13 and attribute <= 15) then 
+		mod = "+1"
+
+	elseif (attribute == 16 or attribute == 17) then 
+		mod = "+2"
+
+	elseif (attribute == 18 or attribute == 19) then 
+		mod = "+3"
+
+	elseif attribute == 20 then 
+		mod = "+4"
+
+	elseif attribute >= 21 then 
+		mod = "+5"
+	end		
+	return mod
+end
+
+-- --------------------------------------------------------------------------------------------------------------
+-- --------------------------------------------------------------------------------------------------------------
+
 --	 variable definition WHAT ARE THESE? Rename them accordingly to what they are ;)
 local cha, con, dex, int, str, wil
 local cha_mod, con_mod, dex_mod, int_mod, str_mod, wil_mod
-
--- ("CHA", a, aa)	
--- ("CON", b, bb)
--- ("DEX", c, cc)
--- ("INT", d, dd)
--- ("STR", e, ee)
--- ("WIL", f, ff)
-
 
 -- 3d6 for all attributes
 
@@ -48,12 +82,13 @@ end
 
 x = (r / 2)
 -- -------to put "bonus points" into attributes---------------
-math.randomseed(os.time())
+print "Calculating bonus attribute points due to level..."
 
+math.randomseed(os.time())
 roll30 = math.random (1,30)
 
 repeat
-   	if x > 1 then
+   	if (x > 1) then
 		if (roll30 == 1) then 
 			cha = cha + 1
 
@@ -73,156 +108,35 @@ repeat
 		elseif (roll30 == 12 or roll30 == 13) then 
 			wil = wil + 1 
 
-		else print "error"
+		-- You should always explain what went wrong
+		else 
+			print "{Error} while calculating bonus levels on character attributes"
 		end
-    else
-        print("Done") 
     end
-	x = x-1
-	if x<=0 then x = 0 end
-
-v = math.random(1,30)
+	x = x - 1
+	if (x <= 0) then 
+		x = 0 
+	end
+	roll30 = math.random(1,30)
 
 until x == 0
-
+print "Done.";
 -- ==========TO CALCULATE ATTRIBUTE MODIFIER (probably there's a way to make it shorter but I didn't wanna mess with it)
-if a == 3 then aa = -3
-	elseif a == 4 then aa = -2
-	elseif a == 5 then aa = -2
-	elseif a == 6 then aa = -1
-	elseif a == 7 then aa = -1
-	elseif a == 8 then aa = -1
-	elseif a == 9 then aa = "+0"
-	elseif a == 10 then aa = "+0"
-	elseif a == 11 then aa = "+0"
-	elseif a == 12 then aa = "+0"
-	elseif a == 13 then aa = "+1"
-	elseif a == 14 then aa = "+1"
-	elseif a == 15 then aa = "+1"
-	elseif a == 16 then aa = "+2"
-	elseif a == 17 then aa = "+2"
-	elseif a == 18 then aa = "+3"
-	elseif a == 19 then aa = "+3"
-	elseif a == 20 then aa = "+4"
-	elseif a == 21 then aa = "+5"
-	elseif a>21 then aa = "+5"
-else print "error"
+print "Calculating attribute modifiers...";
+
+cha_mod = getModifier(cha);
+con_mod = getModifier(con);
+dex_mod = getModifier(dex);
+int_mod = getModifier(int);
+str_mod = getModifier(str);
+wil_mod = getModifier(wil);
+
+if(cha_mod == 999 or con_mod == 999 or dex_mod == 999 or int_mod == 999 or str_mod == 999 or wil_mod == 999) then
+	print "{Error} while calculating attribute modifiers"
 end
 
-if b == 3 then bb = -3
-	elseif b == 4 then bb = -2
-	elseif b == 5 then bb = -2
-	elseif b == 6 then bb = -1
-	elseif b == 7 then bb = -1
-	elseif b == 8 then bb = -1
-	elseif b == 9 then bb = "+0"
-	elseif b == 10 then bb = "+0"
-	elseif b == 11 then bb = "+0"
-	elseif b == 12 then bb = "+0"
-	elseif b == 13 then bb = "+1"
-	elseif b == 14 then bb = "+1"
-	elseif b == 15 then bb = "+1"
-	elseif b == 16 then bb = "+2"
-	elseif b == 17 then bb = "+2"
-	elseif b == 18 then bb = "+3"
-	elseif b == 19 then bb = "+3"
-	elseif b == 20 then bb = "+4"
-	elseif b == 21 then bb = "+5"
-	elseif b>21 then bb = "+5"
-else print "error"
-end
+print "Done.";
 
-if c == 3 then cc = -3
-	elseif c == 4 then cc = -2
-	elseif c == 5 then cc = -2
-	elseif c == 6 then cc = -1
-	elseif c == 7 then cc = -1
-	elseif c == 8 then cc = -1
-	elseif c == 9 then cc = "+0"
-	elseif c == 10 then cc = "+0"
-	elseif c == 11 then cc = "+0"
-	elseif c == 12 then cc = "+0"
-	elseif c == 13 then cc = "+1"
-	elseif c == 14 then cc = "+1"
-	elseif c == 15 then cc = "+1"
-	elseif c == 16 then cc = "+2"
-	elseif c == 17 then cc = "+2"
-	elseif c == 18 then cc = "+3"
-	elseif c == 19 then cc = "+3"
-	elseif c == 20 then cc = "+4"
-	elseif c == 21 then cc = "+5"
-	elseif c>21 then cc = "+5"
-else print "error"
-end
-
-if d == 3 then dd = -3
-	elseif d == 4 then dd = -2
-	elseif d == 5 then dd = -2
-	elseif d == 6 then dd = -1
-	elseif d == 7 then dd = -1
-	elseif d == 8 then dd = -1
-	elseif d == 9 then dd = "+0"
-	elseif d == 10 then dd = "+0"
-	elseif d == 11 then dd = "+0"
-	elseif d == 12 then dd = "+0"
-	elseif d == 13 then dd = "+1"
-	elseif d == 14 then dd = "+1"
-	elseif d == 15 then dd = "+1"
-	elseif d == 16 then dd = "+2"
-	elseif d == 17 then dd = "+2"
-	elseif d == 18 then dd = "+3"
-	elseif d == 19 then dd = "+3"
-	elseif d == 20 then dd = "+4"
-	elseif d == 21 then dd = "+5"
-	elseif d>21 then dd = "+5"
-else print "error"
-end
-
-if e == 3 then ee = -3
-	elseif e == 4 then ee = -2
-	elseif e == 5 then ee = -2
-	elseif e == 6 then ee = -1
-	elseif e == 7 then ee = -1
-	elseif e == 8 then ee = -1
-	elseif e == 9 then ee = "+0"
-	elseif e == 10 then ee = "+0"
-	elseif e == 11 then ee = "+0"
-	elseif e == 12 then ee = "+0"
-	elseif e == 13 then ee = "+1"
-	elseif e == 14 then ee = "+1"
-	elseif e == 15 then ee = "+1"
-	elseif e == 16 then ee = "+2"
-	elseif e == 17 then ee = "+2"
-	elseif e == 18 then ee = "+3"
-	elseif e == 19 then ee = "+3"
-	elseif e == 20 then ee = "+4"
-	elseif e == 21 then ee = "+5"
-	elseif e>21 then ee = "+5"
-else print "error"
-end
-
-if f == 3 then ff = -3
-	elseif f == 4 then ff = -2
-	elseif f == 5 then ff = -2
-	elseif f == 6 then ff = -1
-	elseif f == 7 then ff = -1
-	elseif f == 8 then ff = -1
-	elseif f == 9 then ff = "+0"
-	elseif f == 10 then ff = "+0"
-	elseif f == 11 then ff = "+0"
-	elseif f == 12 then ff = "+0"
-	elseif f == 13 then ff = "+1"
-	elseif f == 14 then ff = "+1"
-	elseif f == 15 then ff = "+1"
-	elseif f == 16 then ff = "+2"
-	elseif f == 17 then ff = "+2"
-	elseif f == 18 then ff = "+3"
-	elseif f == 19 then ff = "+3"
-	elseif f == 20 then ff = "+4"
-	elseif f == 21 then ff = "+5"
-	elseif f>21 then ff = "+5"
-else print "error"
-end
 
 -- =================================================================
 
@@ -230,12 +144,12 @@ end
 print " "
 print "==========Random Character Attributes for MYFAROG 2.6=========="
 print " "
-print ("CHA", a, aa)	
-print ("CON", b, bb)
-print ("DEX", c, cc)
-print ("INT", d, dd)
-print ("STR", e, ee)
-print ("WIL", f, ff)
+print ("CHA", cha, cha_mod)	
+print ("CON", con, con_mod)
+print ("DEX", dex, dex_mod)
+print ("INT", int, int_mod)
+print ("STR", str, str_mod)
+print ("WIL", wil, wil_mod)
 
 -- This calculates weight, size, HP and SP from attributes
 
