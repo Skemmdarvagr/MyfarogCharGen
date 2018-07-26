@@ -7,7 +7,6 @@
 -- Example of an auxiliary function you can define for yourself in order to 
 -- not write duplicated code
 function threeD6()
-	math.randomseed(os.time())
 	return math.random (1,6) + math.random (1,6) + math.random (1,6)
 end
 
@@ -18,7 +17,7 @@ function getModifier(attribute)
 	local mod = 999
 
 	if (attribute == 3) then 
-			mod = "-3"
+		mod = "-3"
 
 	elseif (attribute == 4 or attribute == 5) then 
 		mod = "-2"
@@ -43,40 +42,47 @@ function getModifier(attribute)
 
 	elseif attribute >= 21 then 
 		mod = "+5"
-	end		
+	end
+
 	return mod
 end
 
 -- --------------------------------------------------------------------------------------------------------------
 -- --------------------------------------------------------------------------------------------------------------
 
+-- YOU SHOULD CALL MATH.RANDOMSEED ONLY ONCE IN EVERY EXECUTION
+-- here you have the snippet on the official documentation about how you should do the initialization
+-- of the Random Number Generator	
+math.randomseed(os.time())
+math.random(); math.random(); math.random()
+
+
+-- ==============================================MAIN CODE=================================================
+
 --	 variable definition WHAT ARE THESE? Rename them accordingly to what they are ;)
 local cha, con, dex, int, str, wil
 local cha_mod, con_mod, dex_mod, int_mod, str_mod, wil_mod
 
 -- 3d6 for all attributes
-
 cha = threeD6();
 con = threeD6();
 dex = threeD6();
 int = threeD6();
 str = threeD6();
 wil = threeD6();
-s = (math.random (3,18) +3)
 
-
-
-print "Enter Level Number" 
+print "Enter the character's Level number:" 
 
 -- to calculate level "bonus points"
 
+-- i dont understand what are you using r for, rename it accordingly!
 r = io.read()
 level = r
 
 -- if (r % 2 == 0) then
 --		r = r
 -- You can check directly if the two values are different
-if(r % 2 ~= 0)
+if(r % 2 ~= 0) then
 	r = r - 1
 end
 
@@ -84,7 +90,6 @@ x = (r / 2)
 -- -------to put "bonus points" into attributes---------------
 print "Calculating bonus attribute points due to level..."
 
-math.randomseed(os.time())
 roll30 = math.random (1,30)
 
 repeat
@@ -102,7 +107,7 @@ repeat
 		elseif (roll30 == 7 or roll30 == 8) then
 			int = int + 1
 		
-		elseif ((roll30 >= 9 and roll30 <= 11) or (roll30 >= 14 and roll30 <= 29)) 
+		elseif ((roll30 >= 9 and roll30 <= 11) or (roll30 >= 14 and roll30 <= 29)) then
 			str = str + 1
 
 		elseif (roll30 == 12 or roll30 == 13) then 
@@ -121,7 +126,9 @@ repeat
 
 until x == 0
 print "Done.";
+
 -- ==========TO CALCULATE ATTRIBUTE MODIFIER (probably there's a way to make it shorter but I didn't wanna mess with it)
+-- Heres the shorter way ;)
 print "Calculating attribute modifiers...";
 
 cha_mod = getModifier(cha);
@@ -138,7 +145,20 @@ end
 print "Done.";
 
 
--- =================================================================
+-- =============================================CALCULATE HEIGHT, WEIGHT, HP AND SP, AGE
+print "Calculating the characters body values...";
+
+height = (58+ (math.random(4,24)))
+weight = (height + (math.random(4,24) * 3) + (str_mod * 10) +40)
+
+HP = (str_mod + con + ((r-1)*2))
+SP = (8 + con_mod)
+
+actual_age = (15 + (math.random(1,3)))
+dying_age = (con * 5)
+
+print "Done.";
+-- ================================================================================
 
 -- It starts printing here
 print " "
@@ -151,17 +171,8 @@ print ("INT", int, int_mod)
 print ("STR", str, str_mod)
 print ("WIL", wil, wil_mod)
 
--- This calculates weight, size, HP and SP from attributes
-
-math.randomseed(os.time())
-height = (58+ (math.random(4,24)))
-math.randomseed(os.time())
-weight = (height + (math.random(4,24)*3) + (ee*10) +40)
-
 print ()
-HP = (ee + b + ((r-1)*2))
 print ("HP:", HP)
-SP = (8+bb)
 print ("SP:", SP)
 print ("Level: " .. level)
 print ()
@@ -183,14 +194,13 @@ if weight <= 60 then print ("He is a tiny man.")
 	elseif weight >=  206 and weight <= 255 then print ("He is a big man (+2 to size)")
 	elseif weight >=  256 then print ("He is a giant man (+3 to size")
 
-	end
+end
 
-
-math.randomseed(os.time())
-print ("The character is " .. (15+(math.random(1,3))) .. " years old and he will die of old age at " .. (b*5) .. ".")
-
+print ("The character is " .. actual_age .. " years old and he will die of old age at " .. dying_age .. ".")
 print ()
-print ("The character starts with " .. s .. " oz of silver")
+
+local silver = math.random (3,18) + 3
+print ("The character starts with " .. silver .. " oz of silver")
 print ()
 
 
@@ -201,19 +211,14 @@ cr = (r/2)
 if cr > 5 then cr = 5 end
 math.floor(cr) 
 
-
-print ("His CR (Character Role, +" .. (cyka) .. " bonus) are:")
+-- I think you've got to check this if its okay
+print ("His CR (Character Role, +" .. cr .. " bonus) are:")
 print ()
 
 -- It randomizes the skills to choose, sometimes it repeats choices
 t = 4
-math.randomseed(os.time())
-
 skills = math.random (1,74)
-
 repeat
-
-skills = math.random(1,74)
 
 	if skills <= 3 then print ("Acrobatics")
 	elseif skills == 4 or skills == 5 then print ("Acting")
@@ -247,30 +252,21 @@ skills = math.random(1,74)
 	end
 	
 	t = t-1
-	
-
+	skills = math.random(1,74)
 
 until t == 0
-
 print ()
 
 -- Trained Skills, same as CR
-tr = (r/4)
-
+tr = (r / 4)
 if tr > 4 then tr = 4 end
 
 print ("His TR (Trained, +" .. tr .. " bonus) are:")
-
 print ()
 
 t = 4
-math.randomseed(v+math.random(1,150))
-
 skills = math.random (1,74)
-
 repeat
-
-skills = math.random(1,74)
 
 	if skills <= 3 then print ("Acrobatics")
 	elseif skills == 4 or skills == 5 then print ("Acting")
@@ -300,12 +296,10 @@ skills = math.random(1,74)
 	elseif skills == 66 or skills == 67 or skills == 68 or skills == 69 then print ("Tracking")
 	elseif skills == 70 or skills == 71 or skills == 72 then print ("Trickery")
 	elseif skills == 73 or skills == 74 then print ("World Lore")
-	
 	end
 	
 	t = t-1
-	
-
+	skills = math.random(1,74)
 
 until t == 0
 
